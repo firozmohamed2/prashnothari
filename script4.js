@@ -55,15 +55,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const questionElement = document.createElement("div");
       questionElement.classList.add("question-element"); // Add the question-element class
 
-      // Check if the question object has a 'Question Text ' property
-      if (!question.hasOwnProperty("Question Text ")) {
+      // Check if the question object has a 'QuestionText' property
+      if (!question.hasOwnProperty("QuestionText")) {
         console.error(
-          `Missing 'Question Text ' property for question ${index + 1}.`
+          `Missing 'QuestionText' property for question ${index + 1}.`
         );
         return;
       }
 
-      questionElement.innerHTML = `<p>${question["Question Text "]}</p>`;
+      questionElement.innerHTML = `<p>${question["QuestionText"]}</p>`;
 
       // Check if the question object has 'Option 1', 'Option 2', etc. properties
       const options = [];
