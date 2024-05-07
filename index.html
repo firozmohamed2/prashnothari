@@ -3,14 +3,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz Website</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="styles.css" type="text/css" />
-  </head>
-  <body>
-    <h1>Quiz</h1>
-    <div id="quiz-container"></div>
+    <title>Document</title>
 
-    <script src="script4.js"></script>
+    <style>
+      ul#topicsList {
+        list-style: none; /* Remove the default bullet points */
+        padding: 0; /* Remove default padding */
+      }
+
+      ul#topicsList li {
+        margin: 5px; /* Add some spacing between buttons */
+        padding: 10px 20px; /* Add padding inside buttons */
+        background-color: #f1f1f1; /* Set the background color of buttons */
+        border: 1px solid #ccc; /* Add a border around buttons */
+        border-radius: 5px; /* Add rounded corners to buttons */
+        cursor: pointer; /* Change cursor on hover to indicate clickable */
+      }
+    </style>
+
+    <!-- FontAweome CDN Link for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+  </head>
+
+  <h1>Topics Collection</h1>
+
+  <ul id="topicsList">
+    <!-- Document items will be added here -->
+  </ul>
+
+  <body>
+    <script>
+      // Replace with your Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyA88fPkOvcI4QA9qD3ROpk-ay-V6ibQQlc",
+        authDomain: "my-application-7fd40.firebaseapp.com",
+        projectId: "my-application-7fd40",
+        storageBucket: "my-application-7fd40.appspot.com",
+        messagingSenderId: "269589994279",
+        appId: "1:269589994279:web:4c617a622c328a1224e702",
+        measurementId: "G-D8MD1J28GR",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          var uid = user.uid;
+
+          if (user.isAnonymous) {
+            signinState = 0;
+          } else {
+            email = user.email;
+          }
+
+          // ...
+        } else {
+          // User is signed out
+          // ...
+          signinState = 0;
+          //anonymous signin
+
+          firebase
+            .auth()
+            .signInAnonymously()
+            .then(function () {})
+            .catch(function (error) {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              console.log(errorCode);
+              console.log(errorMessage);
+            });
+        }
+      });
+
+      const firestore = firebase.firestore();
+
+      async function displayTopics() {
+        const topicsList = document.getElementById("topicsList");
+        topicsList.innerHTML = ""; // Clear previous entries, if any
+
+        try {
+          // Fetch all documents from the "topics" collection
+          const querySnapshot = await firestore.collection("psc").get();
+
+          // Iterate through the documents and display them on the webpage
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const topicName = data.name;
+
+            const li = document.createElement("li");
+            li.textContent = topicName;
+
+            //Add a click event listener to each list item
+            li.addEventListener("click", () => {
+              console.log(doc.data()); // Log the complete Firestore document data to the console
+              localStorage.setItem("id", doc.data().docId);
+              localStorage.setItem("name", doc.data().name);
+              localStorage.setItem("data", doc.data().data);
+              location.href = "indexjson.html";
+            });
+            topicsList.appendChild(li);
+          });
+        } catch (error) {
+          console.error("Error fetching documents: ", error);
+        }
+      }
+
+      // Call the function to display topics when the page loads
+      displayTopics();
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
