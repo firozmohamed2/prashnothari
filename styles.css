@@ -1,0 +1,41 @@
+/* Style the radio container */
+#quiz-container {
+    font-family: Arial, sans-serif;
+}
+
+/* Style the question element to add background color */
+.question-element {
+    background-color: #e0f2f1; /* Set your preferred background color */
+    padding: 10px;
+    margin-bottom: 15px; /* Add space between each question element */
+    border-radius: 8px;
+}
+/* Style the label to make it look like a button */
+label {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid #4CAF50; /* Button border color */
+    background-color: #ffffff; /* Button background color */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Style the label when hovered */
+label:hover {
+    background-color: #4CAF50; /* Button background color on hover */
+    color: #ffffff; /* Button text color on hover */
+}
+
+/* Hide the actual radio button */
+input[type="radio"] {
+    display: none;
+}
+
+/* Style the radio button label when checked */
+input[type="radio"]:checked + label {
+    background-color: #4CAF50; /* Button background color when selected */
+    color: #ffffff; /* Button text color when selected */
+    border-color: #4CAF50; /* Button border color when selected */
+}
