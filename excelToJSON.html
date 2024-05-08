@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excel to JSON Converter</title>
+  </head>
+  <body>
+    <textarea
+      id="excelData"
+      rows="10"
+      cols="50"
+      placeholder="Paste your Excel data here..."
+    ></textarea
+    ><br />
+    <button onclick="convertToJSON()">Convert to JSON</button><br />
+    <textarea
+      id="jsonData"
+      rows="10"
+      cols="50"
+      placeholder="JSON will be displayed here..."
+    ></textarea>
+
+    <script>
+      // Function to convert Excel data from textarea to JSON
+      function excelToJSON(excelData) {
+        // Split copied data by rows
+        const rows = excelData.split("\n");
+
+        // Extract header row
+        const headers = rows[0].split("\t");
+
+        // Initialize array to hold JSON objects
+        const jsonData = [];
+
+        // Iterate over rows (starting from index 1 since index 0 is header)
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i].split("\t");
+          const rowData = {};
+
+          // Iterate over columns
+          for (let j = 0; j < headers.length; j++) {
+            if (row[j] !== undefined) {
+              rowData[headers[j]] = row[j].trim();
+            } else {
+              // If row[j] is undefined, assign an empty string to avoid errors
+              rowData[headers[j]] = "";
+            }
+          }
+
+          // Add row data to JSON array
+          jsonData.push(rowData);
+        }
+
+        return jsonData;
+      }
+
+      // Function to convert and display JSON
+      function convertToJSON() {
+        const excelData = document.getElementById("excelData").value;
+        const jsonData = excelToJSON(excelData);
+        const jsonTextArea = document.getElementById("jsonData");
+        jsonTextArea.value = JSON.stringify(jsonData, null, 2);
+      }
+    </script>
+  </body>
+</html>
