@@ -91,13 +91,75 @@
         const name = document.getElementById('name').value; // Document name
         const data = document.getElementById('jsonData').value; // Data to upload
 
-        // Adding data to Firestore using name as the document ID
-        firestore
+        convertToJSON(name);
+
+       
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // Function to convert Excel data from textarea to JSON
+      function excelToJSON(excelData) {
+        // Split copied data by rows
+        const rows = excelData.split("\n");
+
+        // Extract header row
+        const headers = rows[0].split("\t");
+
+        // Initialize array to hold JSON objects
+        const jsonData = [];
+
+        // Iterate over rows (starting from index 1 since index 0 is header)
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i].split("\t");
+          const rowData = {};
+
+          // Iterate over columns
+          for (let j = 0; j < headers.length; j++) {
+            if (row[j] !== undefined) {
+              rowData[headers[j]] = row[j].trim();
+            } else {
+              // If row[j] is undefined, assign an empty string to avoid errors
+              rowData[headers[j]] = "";
+            }
+          }
+
+          // Add row data to JSON array
+          jsonData.push(rowData);
+        }
+
+        
+
+        return jsonData;
+      }
+
+      // Function to convert and display JSON
+      function convertToJSON(name) {
+        const excelData = document.getElementById("jsonData").value;
+        const jsonData = excelToJSON(excelData);
+        const stringJson= JSON.stringify(jsonData, null, 2);
+
+        //const jsonTextArea = document.getElementById("jsonData");
+        //jsonTextArea.value = JSON.stringify(jsonData, null, 2);
+
+
+         // Adding data to Firestore using name as the document ID
+         firestore
           .collection("kpsc")
           .doc("hca")
           .collection("entri")
           .doc(name)
-          .set({ name: name, data: data })
+          .set({ name: name, data: stringJson })
           .then(() => {
             document.getElementById('status').innerHTML =
               "Data successfully uploaded!";
@@ -107,6 +169,7 @@
               "Error uploading data: " + error;
           });
       }
+
 
      
     </script>
